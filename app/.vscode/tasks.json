@@ -46,6 +46,32 @@
             ],
             "label": "npm: all",
             "detail": "npm run build && npm run build-minify"
+        },
+        {
+            "label": "db wipe",
+            "type": "shell",
+            "command": "rm -Recurse ./Migrations/; rm app.db;",
+            "problemMatcher": [
+                "$msCompile"
+            ]
+        },
+        {
+            "label": "db upgrade",
+            "type": "shell",
+            "command": "dotnet ef migrations add auto; dotnet ef database update",
+            "problemMatcher": [
+                "$msCompile"
+            ]
+        },
+        {
+            "label": "db reset",
+            "type": "shell",
+            "command": "Write-Host done",
+            "dependsOn": [
+                "db wipe",
+                "db upgrade"
+            ],
+            "problemMatcher": []
         }
     ]
 }

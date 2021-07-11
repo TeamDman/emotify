@@ -48,7 +48,7 @@ namespace Emotify
             // services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
-            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+            services.AddDefaultIdentity<Models.EmotifyUser>(options => options.SignIn.RequireConfirmedAccount = true)
                     .AddEntityFrameworkStores<EmotifyDbContext>();
         }
 
