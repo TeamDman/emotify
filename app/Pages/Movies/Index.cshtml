@@ -10,15 +10,25 @@
 <p>
     <a asp-page="Create">Create New</a>
 </p>
-<form>
-    <p>
-        <select asp-for="MovieGenre" asp-items="Model.Genres">
-            <option value="">All</option>
-        </select>
-        Title: <input type="text" asp-for="SearchString" />
-        <input type="submit" value="Filter" />
-    </p>
-</form>
+<div class="col-md-6">
+    <form>
+        <div class="form-group">
+            <label asp-for="MovieGenre"></label>
+            <br/>
+            <select asp-for="MovieGenre" asp-items="Model.Genres">
+                <option value="">All</option>
+            </select>
+        </div>
+        <div class="form-group my-2">
+            <label asp-for="SearchString"></label>
+            <input class="form-control" type="text" asp-for="SearchString" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="Filter" />
+        </div>
+    </form>
+</div>
+<hr/>
 <table class="table">
     <thead>
         <tr>
@@ -41,29 +51,30 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model.Movie) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ReleaseDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Genre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Rating)
-            </td>
-            <td>
-                <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
-                <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
-                <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model.Movie)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Title)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ReleaseDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Genre)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Rating)
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
