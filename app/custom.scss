@@ -1,21 +1,48 @@
-// the default color variables, you might want to custom it
-$white:    #fff !default;
-$gray-900: #212529 !default;
+// @import "./node_modules/bootstrap/scss/_functions";
+// @import "./node_modules/bootstrap/scss/_variables";
+
+// colours
+$white:    #fff;
+$black: #000;
+
+$gray-900: #212529;
 $dgbg-primary: rgb(54, 57, 63);
 $dgbg-secondary: rgb(47, 49, 54);
 $dgbg-tertiary: rgb(32, 34, 37);
+$dgbg-display: rgb(142, 146, 151);
+
 $link: rgb(0, 175, 244);
-$form-control-bg: rgb(64, 68, 75) !default;
 
-// override the default variables
-$body-bg: $dgbg-primary !default; 
-$body-color: $white !default;
-$input-bg: $form-control-bg !default;
-$form-check-input-bg: $form-control-bg !default;
-$input-border-width: 0 !default;
+$theme-colors: (
+    primary: #4e5d94,
+    dark: $dgbg-tertiary
+);
 
-// ... you might want to override other default colors for modal/carousel/card/...
-//     feel free to override these variables if you need
+// fonts
+$font-family-sans-serif: Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
+$font-display: Ginto, Whitney, "Helvetica Neue", Helvetica, Arial, sans-serif;
 
-// import the whole bootstrap
+// body
+$body-bg: $dgbg-primary; 
+$body-color: $white;
+
+// form controls
+$form-control-bg: rgb(64, 68, 75);
+
+$form-label-color: $dgbg-display;
+$form-label-font-weight: 600;
+.form-label {
+    text-transform: uppercase;
+    font-family: $font-display;
+}
+
+$input-bg: $form-control-bg;
+$input-border-width: 1px;
+$input-border-color: $gray-900;
+
+$form-check-input-bg: $form-control-bg;
+$form-select-border-color: $gray-900;
+$form-select-border-width: 1px;
+
+
 @import "./node_modules/bootstrap/scss/bootstrap";
