@@ -1,6 +1,22 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+:root {
+  --background-primary: rgb(54, 57, 63);
+  --background-secondary: rgb(47, 49, 54);
+  --background-tertiary: rgb(32, 34, 37);
+  --text-normal: #FFFFFF;
+  --header-primary: #FFFFFF;
+}
+
+.bg-black {
+  background-color: var(--background-tertiary) !important;
+}
+
+.active {
+  color: var(--header-primary);
+}
+
 a.navbar-brand {
   white-space: normal;
   text-align: center;
