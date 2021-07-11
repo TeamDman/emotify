@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc.Routing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 
 namespace Emotify
 {
@@ -35,7 +36,7 @@ namespace Emotify
             {
             }
             
-            services.AddDbContext<EmotifyContext>(options =>
+            services.AddDbContext<EmotifyDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("EmotifyContext")
                 )
@@ -46,6 +47,9 @@ namespace Emotify
             // services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             // services.AddHttpContextAccessor();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
+
+            services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddEntityFrameworkStores<EmotifyDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

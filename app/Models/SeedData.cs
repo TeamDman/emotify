@@ -10,9 +10,9 @@ namespace Emotify.Models
     {
         public static void Initialize(IServiceProvider serviceProvider)
         {
-            using (var context = new EmotifyContext(
+            using (var context = new EmotifyDbContext(
                 serviceProvider.GetRequiredService<
-                    DbContextOptions<EmotifyContext>>()))
+                    DbContextOptions<EmotifyDbContext>>()))
             {
                 // Look for any movies.
                 if (context.Movie.Any())

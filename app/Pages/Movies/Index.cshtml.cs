@@ -12,9 +12,9 @@ namespace Emotify.Pages_Movies
 
     public class IndexModel : PageModel
     {
-        private readonly EmotifyContext _context;
+        private readonly EmotifyDbContext _context;
 
-        public IndexModel(EmotifyContext context)
+        public IndexModel(EmotifyDbContext context)
         {
             _context = context;
         }

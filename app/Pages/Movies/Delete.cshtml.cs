@@ -11,9 +11,9 @@ namespace Emotify.Pages_Movies
 {
     public class DeleteModel : PageModel
     {
-        private readonly EmotifyContext _context;
+        private readonly EmotifyDbContext _context;
 
-        public DeleteModel(EmotifyContext context)
+        public DeleteModel(EmotifyDbContext context)
         {
             _context = context;
         }

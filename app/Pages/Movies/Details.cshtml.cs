@@ -11,9 +11,9 @@ namespace Emotify.Pages_Movies
 {
     public class DetailsModel : PageModel
     {
-        private readonly EmotifyContext _context;
+        private readonly EmotifyDbContext _context;
 
-        public DetailsModel(EmotifyContext context)
+        public DetailsModel(EmotifyDbContext context)
         {
             _context = context;
         }

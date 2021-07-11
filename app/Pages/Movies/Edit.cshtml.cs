@@ -12,9 +12,9 @@ namespace Emotify.Pages_Movies
 {
     public class EditModel : PageModel
     {
-        private readonly EmotifyContext _context;
+        private readonly EmotifyDbContext _context;
 
-        public EditModel(EmotifyContext context)
+        public EditModel(EmotifyDbContext context)
         {
             _context = context;
         }

@@ -2,19 +2,21 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Emotify.Models;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 
-namespace Emotify.Areas.Identity.Data
-{
-    public class EmotifyIdentityDbContext : IdentityDbContext<IdentityUser>
+public class EmotifyDbContext : IdentityDbContext<IdentityUser>
     {
-        public EmotifyIdentityDbContext(DbContextOptions<EmotifyIdentityDbContext> options)
+        public EmotifyDbContext (DbContextOptions<EmotifyDbContext> options)
             : base(options)
         {
         }
 
+        public DbSet<Emotify.Models.Movie> Movie { get; set; }
+
+        
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
@@ -23,4 +25,3 @@ namespace Emotify.Areas.Identity.Data
             // Add your customizations after calling base.OnModelCreating(builder);
         }
     }
-}
