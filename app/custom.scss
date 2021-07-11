@@ -6,16 +6,24 @@ $white:    #fff;
 $black: #000;
 
 $gray-900: #212529;
+$blurple: #4e5d94;
 $dgbg-primary: rgb(54, 57, 63);
 $dgbg-secondary: rgb(47, 49, 54);
 $dgbg-tertiary: rgb(32, 34, 37);
 $dgbg-display: rgb(142, 146, 151);
+$color-danger: rgb(237, 66, 69);
 
 $link: rgb(0, 175, 244);
 
 $theme-colors: (
-    primary: #4e5d94,
-    dark: $dgbg-tertiary
+    primary: $blurple,
+    secondary: rgb(79, 84, 92),
+    bg-primary: $dgbg-primary,
+    bg-secondary: $dgbg-secondary,
+    bg-tertiary: $dgbg-tertiary,
+    // light: rgb(79, 84, 92),
+    // dark: $dgbg-tertiary,
+    danger: $color-danger
 );
 
 // fonts
@@ -46,3 +54,12 @@ $form-select-border-width: 1px;
 
 
 @import "./node_modules/bootstrap/scss/bootstrap";
+
+
+.btn-danger {
+    background-color: transparent;
+    border-width: 2px;
+    border-color: $color-danger;
+    border-style: solid;
+    color: $color-danger;
+}
