@@ -1,0 +1,17 @@
+{
+  "name": "app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "all": "npm run build && npm run build-minify",
+    "build": "node-sass ./custom.scss wwwroot/css/bootstrap.custom.css --output-style expanded",
+    "build-minify": "node-sass ./custom.scss wwwroot/css/bootstrap.min.css --output-style compressed"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "bootstrap": "^5.0.2"
+  }
+}

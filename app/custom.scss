@@ -1,0 +1,17 @@
+// the default color variables, you might want to custom it
+$white:    #fff !default;
+$gray-900: #212529 !default;
+$dgbg-primary: rgb(54, 57, 63);
+$dgbg-secondary: rgb(47, 49, 54);
+$dgbg-tertiary: rgb(32, 34, 37);
+
+
+// override the default variables
+$body-bg: $dgbg-primary !default; 
+$body-color: $white !default;
+
+// ... you might want to override other default colors for modal/carousel/card/...
+//     feel free to override these variables if you need
+
+// import the whole bootstrap
+@import "./node_modules/bootstrap/scss/bootstrap";

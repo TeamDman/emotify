@@ -37,6 +37,15 @@
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
+        },
+        {
+            "type": "npm",
+            "script": "all",
+            "problemMatcher": [
+                "$node-sass"
+            ],
+            "label": "npm: all",
+            "detail": "npm run build && npm run build-minify"
         }
     ]
 }

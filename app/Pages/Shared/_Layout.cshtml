@@ -1,32 +1,46 @@
-﻿<!DOCTYPE html>
+﻿@using Microsoft.AspNetCore.Hosting;
+@using Microsoft.Extensions.Hosting;
+@inject IWebHostEnvironment env
+
+<!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"]</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    @if (env.IsDevelopment())
+    {
+        <link rel="stylesheet" href="~/css/bootstrap.custom.css" />
+    }
+    else
+    {
+        <link rel="stylesheet" href="~/css/bootstrap.min.css" />
+    }
     <link rel="stylesheet" href="~/css/site.css" />
 </head>
+@* <body class="bg-primary text-primary"> *@
+
 <body>
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-black border-bottom box-shadow mb-3">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-page="/Index">Emotify</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse"
+                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <partial name="_LoginPartial" />
                     <ul class="navbar-nav flex-grow-1">
-                        <li navigation-active-for="/Index" class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Index">Home</a>
+                        <li class="nav-item">
+                            <a navigation-active-for="/Index" class="nav-link" asp-area="" asp-page="/Index">Home</a>
                         </li>
-                        <li navigation-active-for="/Privacy" class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Privacy">Privacy</a>
+                        <li class="nav-item">
+                            <a navigation-active-for="/Privacy" class="nav-link" asp-area="" asp-page="/Privacy">Privacy</a>
                         </li>
-                        <li navigation-active-for="/Movies/Index" class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Movies/Index">Movies</a>
+                        <li class="nav-item">
+                            <a navigation-active-for="/Movies/Index" class="nav-link" asp-area="" asp-page="/Movies/Index">Movies</a>
                         </li>
                     </ul>
                 </div>
@@ -51,4 +65,5 @@
 
     @await RenderSectionAsync("Scripts", required: false)
 </body>
+
 </html>
