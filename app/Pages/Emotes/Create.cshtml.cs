@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Emotify.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Emotify.Pages.Emotes
 {
@@ -15,6 +16,7 @@ namespace Emotify.Pages.Emotes
         public string Name { get; set; }
     }
 
+    [Authorize]
     public class CreateModel : PageModel
     {
         private readonly EmotifyDbContext _context;
@@ -32,7 +34,7 @@ namespace Emotify.Pages.Emotes
         }
 
         [BindProperty]
-        public EmoteVM Emote { get; set; }
+        public EmoteVM EmoteResponse { get; set; }
 
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
@@ -51,7 +53,7 @@ namespace Emotify.Pages.Emotes
                 Names = new List<EmoteName>(){
                     new EmoteName()
                     {
-                        Name = Emote.Name
+                        Name = EmoteResponse.Name
                     }
                 }
             };

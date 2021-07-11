@@ -1,0 +1,52 @@
+@page "{searchString?}"
+@model Emotify.Pages.Emotes.IndexModel
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-page="Create">Create New</a>
+</p>
+<div class="col-md-6">
+    <form>
+        <div class="form-group my-2">
+            <label class="form-label" asp-for="SearchString"></label>
+            <input class="form-control" type="text" asp-for="SearchString" />
+        </div>
+        <div class="form-group">
+            <input class="btn btn-primary" type="submit" value="Filter" />
+        </div>
+    </form>
+</div>
+<hr/>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Emotes[0].Names)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Emotes)
+        {
+            <tr>
+                <td>
+                    @foreach (var name in item.Names)
+                    {
+                        <p>@Html.DisplayFor(model => name.Name)</p>
+                    }
+                </td>
+                <td>
+                    <a asp-page="./Edit" asp-route-id="@item.Id">Edit</a> |
+                    <a asp-page="./Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
