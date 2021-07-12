@@ -58,7 +58,7 @@
         {
             "label": "db upgrade",
             "type": "shell",
-            "command": "dotnet ef migrations add auto; dotnet ef database update",
+            "command": "dotnet ef migrations add ${input:migrationName}; dotnet ef database update",
             "problemMatcher": [
                 "$msCompile"
             ]
@@ -72,6 +72,13 @@
                 "db upgrade"
             ],
             "problemMatcher": []
+        }
+    ],
+    "inputs": [
+        {
+            "id": "migrationName",
+            "description":"Name of the migration to be created",
+            "type": "promptString"
         }
     ]
 }

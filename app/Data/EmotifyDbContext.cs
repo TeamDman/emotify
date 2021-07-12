@@ -14,7 +14,6 @@ public class EmotifyDbContext : IdentityDbContext<EmotifyUser>
         {
         }
 
-        public DbSet<Emotify.Models.Movie> Movie { get; set; }
         public DbSet<Emotify.Models.Emote> Emotes {get; set;}
 
         public async Task<Emote> GetEmoteById(int? id) {

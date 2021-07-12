@@ -15,6 +15,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
+using Emotify.Authorization;
+using Emotify.Models;
 
 namespace Emotify
 {
@@ -35,7 +39,7 @@ namespace Emotify
             if (Environment.IsDevelopment())
             {
             }
-            
+
             services.AddDbContext<EmotifyDbContext>(options =>
                 options.UseSqlite(
                     Configuration.GetConnectionString("EmotifyContext")
@@ -49,7 +53,17 @@ namespace Emotify
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             services.AddDefaultIdentity<Models.EmotifyUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                    .AddRoles<IdentityRole>()
                     .AddEntityFrameworkStores<EmotifyDbContext>();
+
+            services.AddAuthorization(options =>
+            {
+                // options.FallbackPolicy = new AuthorizationPolicyBuilder()
+                    // .Require
+                    // .RequireAuthenticatedUser()
+                    // .Build();
+            });
+            services.AddScoped<IAuthorizationHandler, EmoteAuthorizationHandler>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

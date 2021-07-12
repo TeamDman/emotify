@@ -4,12 +4,13 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Emotify.Models;
 using System;
+using System.Threading.Tasks;
 
 namespace Emotify
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
 
@@ -19,7 +20,7 @@ namespace Emotify
 
                 try
                 {
-                    SeedData.Initialize(services);
+                    await SeedData.Initialize(services);
                 }
                 catch (Exception ex)
                 {

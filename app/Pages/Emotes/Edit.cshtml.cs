@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Emotify.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Emotify.Authorization;
 
 namespace Emotify.Pages.Emotes
 {
@@ -16,13 +19,15 @@ namespace Emotify.Pages.Emotes
         public string Names { get; set; }
     }
 
-    public class EditModel : PageModel
+    public class EditModel : EmotifyBasePageModel
     {
-        private readonly EmotifyDbContext _context;
 
-        public EditModel(EmotifyDbContext context)
+        public EditModel(
+            EmotifyDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<EmotifyUser> userManager)
+        : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
         [BindProperty]
@@ -35,11 +40,17 @@ namespace Emotify.Pages.Emotes
                 return NotFound();
             }
 
-            var Emote = await _context.GetEmoteById(id);
+            var Emote = await Context.GetEmoteById(id);
 
             if (Emote == null)
             {
                 return NotFound();
+            }
+
+            var isAuthorized = await AuthorizationService.AuthorizeAsync(User, Emote, EmoteOperations.Modify);
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
             }
 
             Edit = new EmoteEditVM
@@ -58,13 +69,13 @@ namespace Emotify.Pages.Emotes
                 return Page();
             }
 
-            var Emote = await _context.GetEmoteById(Edit.Id);
+            var Emote = await Context.GetEmoteById(Edit.Id);
             Emote.Names = Edit.Names.Split(",").Select(name => new EmoteName() { EmoteId = Emote.Id, Name = name }).ToList();
-            _context.Attach(Emote).State = EntityState.Modified;
+            Context.Attach(Emote).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await Context.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -83,7 +94,7 @@ namespace Emotify.Pages.Emotes
 
         private bool EmoteExists(int id)
         {
-            return _context.Emotes.Any(e => e.Id == id);
+            return Context.Emotes.Any(e => e.Id == id);
         }
     }
 }

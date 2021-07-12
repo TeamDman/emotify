@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Emotify.Migrations
 {
-    public partial class auto : Migration
+    public partial class main : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -44,23 +44,6 @@ namespace Emotify.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "Movie",
-                columns: table => new
-                {
-                    ID = table.Column<int>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Title = table.Column<string>(type: "TEXT", maxLength: 60, nullable: true),
-                    ReleaseDate = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    Price = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    Rating = table.Column<string>(type: "TEXT", maxLength: 5, nullable: false),
-                    Genre = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Movie", x => x.ID);
                 });
 
             migrationBuilder.CreateTable(
@@ -269,9 +252,6 @@ namespace Emotify.Migrations
 
             migrationBuilder.DropTable(
                 name: "EmoteName");
-
-            migrationBuilder.DropTable(
-                name: "Movie");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
