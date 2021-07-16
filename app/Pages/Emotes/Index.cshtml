@@ -21,30 +21,26 @@
         </div>
     </form>
 </div>
-<hr/>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Emotes[0].Name)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model.Emotes)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(model => item.Name)
-                    <image src="@item.EmoteImage.GetHtmlSrcAttribute()"></image>
-                </td>
-                <td>
-                    <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
-                    <a class="btn btn-primary mx-2" asp-page="./Details" asp-route-id="@item.Id">Details</a>
-                    <a class="btn btn-primary" asp-page="./Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
-            </tr>
-        }
-    </tbody>
-</table>
+<hr />
+<div class="d-flex">
+    @foreach (var item in Model.Emotes)
+    {
+        <div class="m-2">
+            <div class="col-xs-12 p-2 bg-primary">
+                <span>@Html.DisplayFor(model => item.Name)</span>
+            </div>
+            <image class="emote-image" src="@item.EmoteImage.GetHtmlSrcAttribute()" aria-label="Emote image"></image>
+            <div class="col-xs-12 p-1 bg-secondary">
+                <a class="text-decoration-none p-2" asp-page="./Edit" asp-route-id="@item.Id">
+                    <span class="fas fa-edit" aria-label="Edit"></span>
+                </a>
+                <a class="text-decoration-none p-2" asp-page="./Details" asp-route-id="@item.Id">
+                    <span class="fas fa-info" aria-label="Details"></span>
+                </a>
+                <a class="text-decoration-none p-2" asp-page="./Delete" asp-route-id="@item.Id">
+                    <span class="fas fa-trash" aria-label="Delete"></span>
+                </a>
+            </div>
+        </div>
+    }
+</div>

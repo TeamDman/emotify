@@ -48,3 +48,11 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+
+/* Emote image */
+
+.emote-image {
+  width: 100px;
+  height: 100px;
+}
