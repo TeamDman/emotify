@@ -25,7 +25,7 @@ namespace Emotify.Extensions
         public async static Task<EmoteImage> FindExistingOrDefault(this EmoteImage image, EmotifyDbContext context)
         {
             EmoteImage found = await context.EmoteImages.Where(i => i.Hash == image.Hash).FirstOrDefaultAsync();
-            return found;
+            return found ?? image;
         }
     }
 }

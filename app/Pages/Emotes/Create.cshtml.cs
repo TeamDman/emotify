@@ -51,10 +51,11 @@ namespace Emotify.Pages.Emotes
             {
                 return Page();
             }
-            Regex expression = new Regex(@"\.(png|jpg|jpeg)");
+            Regex expression = new Regex(@"\.(png|jpg|jpeg|gif)");
             if (!expression.IsMatch(EmoteResponse.File.FileName))
             {
-                ModelState.AddModelError("File","Please select an image file.");
+                ModelState.AddModelError("EmoteResponse.File","Please select an image file.");
+                return Page();
             }
 
 
@@ -73,7 +74,7 @@ namespace Emotify.Pages.Emotes
                 await EmoteResponse.File.CopyToAsync(memoryStream);
                 if (memoryStream.Length >= 1024 * 256)
                 {
-                    ModelState.AddModelError("File", "The file must be 256KiB or smaller.");
+                    ModelState.AddModelError("EmoteResponse.File", "The file must be 256KiB or smaller.");
                     return Page();
                 }
                 // Create image from file
@@ -81,7 +82,8 @@ namespace Emotify.Pages.Emotes
                 var image = new EmoteImage()
                 {
                     Content = imageArray,
-                    Hash = Convert.ToBase64String(MD5.Create().ComputeHash(imageArray))
+                    Hash = Convert.ToBase64String(MD5.Create().ComputeHash(imageArray)),
+                    FileType = System.IO.Path.GetExtension(EmoteResponse.File.FileName),
                 };
 
                 // Use existing image entry if exists
@@ -89,10 +91,16 @@ namespace Emotify.Pages.Emotes
 
                 // Assign image to emote
                 emote.EmoteImage = image;
+
+                // Commit image to db
+                Context.EmoteImages.Add(image);
+
             }
 
-
+            // Commit emote to db
             Context.Emotes.Add(emote);
+
+            // Save new records
             await Context.SaveChangesAsync();
 
             return RedirectToPage("./Index");

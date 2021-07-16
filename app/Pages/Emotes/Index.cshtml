@@ -37,6 +37,7 @@
             <tr>
                 <td>
                     @Html.DisplayFor(model => item.Name)
+                    <image src="@item.EmoteImage.GetHtmlSrcAttribute()"></image>
                 </td>
                 <td>
                     <a class="btn btn-primary" asp-page="./Edit" asp-route-id="@item.Id">Edit</a>
