@@ -6,16 +6,21 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Emotify.Models;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
+using Emotify.Authorization;
 
 namespace Emotify.Pages.Emotes
 {
-    public class DeleteModel : PageModel
+    public class DeleteModel : EmotifyBasePageModel
     {
-        private readonly EmotifyDbContext _context;
 
-        public DeleteModel(EmotifyDbContext context)
+        public DeleteModel(
+            EmotifyDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<EmotifyUser> userManager)
+        : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
         [BindProperty]
@@ -28,12 +33,19 @@ namespace Emotify.Pages.Emotes
                 return NotFound();
             }
 
-            Emote = await _context.Emotes.Where(e => e.Id == id).Include(e => e.Names).FirstOrDefaultAsync();
+            Emote = await Context.GetEmoteById(id);
 
             if (Emote == null)
             {
                 return NotFound();
             }
+
+            var isAuthorized = await AuthorizationService.AuthorizeAsync(User, Emote, EmoteOperations.Modify);
+            if (!isAuthorized.Succeeded)
+            {
+                return Forbid();
+            }
+
             return Page();
         }
 
@@ -44,12 +56,17 @@ namespace Emotify.Pages.Emotes
                 return NotFound();
             }
 
-            Emote = await _context.Emotes.FindAsync(id);
+            Emote = await Context.Emotes.FindAsync(id);
 
             if (Emote != null)
             {
-                _context.Emotes.Remove(Emote);
-                await _context.SaveChangesAsync();
+                var isAuthorized = await AuthorizationService.AuthorizeAsync(User, Emote, EmoteOperations.Modify);
+                if (!isAuthorized.Succeeded)
+                {
+                    return Forbid();
+                }
+                Context.Emotes.Remove(Emote);
+                await Context.SaveChangesAsync();
             }
 
             return RedirectToPage("./Index");

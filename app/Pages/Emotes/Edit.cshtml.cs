@@ -16,7 +16,7 @@ namespace Emotify.Pages.Emotes
     public class EmoteEditVM
     {
         public int Id { get; set; }
-        public string Names { get; set; }
+        public string Name { get; set; }
     }
 
     public class EditModel : EmotifyBasePageModel
@@ -56,7 +56,7 @@ namespace Emotify.Pages.Emotes
             Edit = new EmoteEditVM
             {
                 Id = Emote.Id,
-                Names = string.Join(",", Emote.Names.Select(n => n.Name))
+                Name = Emote.Name
             };
 
             return Page();
@@ -70,8 +70,9 @@ namespace Emotify.Pages.Emotes
             }
 
             var Emote = await Context.GetEmoteById(Edit.Id);
-            Emote.Names = Edit.Names.Split(",").Select(name => new EmoteName() { EmoteId = Emote.Id, Name = name }).ToList();
-            Context.Attach(Emote).State = EntityState.Modified;
+            var Entry = Context.Attach(Emote);
+            Entry.CurrentValues.SetValues(Edit);
+            Entry.State = EntityState.Modified;
 
             try
             {

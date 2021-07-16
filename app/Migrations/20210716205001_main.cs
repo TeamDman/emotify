@@ -47,6 +47,20 @@ namespace Emotify.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "EmoteImage",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Hash = table.Column<string>(type: "TEXT", nullable: true),
+                    Content = table.Column<byte[]>(type: "BLOB", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_EmoteImage", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "AspNetRoleClaims",
                 columns: table => new
                 {
@@ -159,33 +173,22 @@ namespace Emotify.Migrations
                     Id = table.Column<int>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
                     OwnerUserId = table.Column<string>(type: "TEXT", maxLength: 128, nullable: true),
-                    OwnerId = table.Column<string>(type: "TEXT", nullable: true)
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    EmoteImageId = table.Column<int>(type: "INTEGER", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Emotes", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_Emotes_AspNetUsers_OwnerId",
-                        column: x => x.OwnerId,
+                        name: "FK_Emotes_AspNetUsers_OwnerUserId",
+                        column: x => x.OwnerUserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
-                });
-
-            migrationBuilder.CreateTable(
-                name: "EmoteName",
-                columns: table => new
-                {
-                    EmoteId = table.Column<int>(type: "INTEGER", nullable: false),
-                    Name = table.Column<string>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_EmoteName", x => new { x.EmoteId, x.Name });
                     table.ForeignKey(
-                        name: "FK_EmoteName_Emotes_EmoteId",
-                        column: x => x.EmoteId,
-                        principalTable: "Emotes",
+                        name: "FK_Emotes_EmoteImage_EmoteImageId",
+                        column: x => x.EmoteImageId,
+                        principalTable: "EmoteImage",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -228,9 +231,14 @@ namespace Emotify.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
-                name: "IX_Emotes_OwnerId",
+                name: "IX_Emotes_EmoteImageId",
                 table: "Emotes",
-                column: "OwnerId");
+                column: "EmoteImageId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Emotes_OwnerUserId",
+                table: "Emotes",
+                column: "OwnerUserId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -251,16 +259,16 @@ namespace Emotify.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "EmoteName");
+                name: "Emotes");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
 
             migrationBuilder.DropTable(
-                name: "Emotes");
+                name: "AspNetUsers");
 
             migrationBuilder.DropTable(
-                name: "AspNetUsers");
+                name: "EmoteImage");
         }
     }
 }

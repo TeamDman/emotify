@@ -8,11 +8,9 @@
         @Html.DisplayFor(emote => emote.Id)
     </dd>
     <dt class="col-sm-2">
-        @Html.DisplayNameFor(emote => emote.Names)
+        @Html.DisplayNameFor(emote => emote.Name)
     </dt>
-    @foreach (var name in Model.Names) {
-        <dd class="col-sm-10">
-            @Html.DisplayFor(_ => name.Name)
-        </dd>
-    }
+    <dd class="col-sm-10">
+        @Html.DisplayFor(emote => emote.Name)
+    </dd>
 </dl>

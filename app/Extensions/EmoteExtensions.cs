@@ -1,7 +1,9 @@
 
+using System.Linq;
 using System.Threading.Tasks;
 using Emotify.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Emotify.Extensions
 {
@@ -9,7 +11,8 @@ namespace Emotify.Extensions
     {
         public async static Task<bool> CanModify(this Emote emote, EmotifyUser user, RoleManager<EmotifyUser> manager)
         {
-            if (user.Id == emote.OwnerUserId) {
+            if (user.Id == emote.OwnerUserId)
+            {
                 return true;
             }
             var claims = await manager.GetClaimsAsync(user);
@@ -17,6 +20,12 @@ namespace Emotify.Extensions
             //     return true;
             // }
             return false;
+        }
+
+        public async static Task<EmoteImage> FindExistingOrDefault(this EmoteImage image, EmotifyDbContext context)
+        {
+            EmoteImage found = await context.EmoteImages.Where(i => i.Hash == image.Hash).FirstOrDefaultAsync();
+            return found;
         }
     }
 }

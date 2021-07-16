@@ -10,25 +10,19 @@ namespace Emotify.Models
     {
         public int Id { get; set; }
 
-        [MaxLength(128), ForeignKey(nameof(EmotifyUser))]
+        [MaxLength(128)]
         public virtual string OwnerUserId { get; set; }
+        
+        [ForeignKey(nameof(OwnerUserId))]
         public virtual EmotifyUser Owner { get; set; }
 
-        public virtual ICollection<EmoteName> Names { get; set; }
-    }
 
-    public class EmoteName
-    {
-        public int EmoteId { get; set; }
         public string Name { get; set; }
 
-        public virtual Emote Emote {get; set;}
+        public int EmoteImageId { get; set; }
 
-        public static void OnModelCreating(ModelBuilder builder)
-        {
-            builder.Entity<EmoteName>()
-                .HasKey(e => new { e.EmoteId, e.Name });
-        }
+        [ForeignKey(nameof(EmoteImageId))]
+
+        public virtual EmoteImage EmoteImage { get; set; }
     }
-
 }

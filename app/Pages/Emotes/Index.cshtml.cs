@@ -6,17 +6,21 @@ using Emotify.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Emotify.Pages.Emotes
 {
 
-    public class IndexModel : PageModel
+    public class IndexModel : EmotifyBasePageModel
     {
-        private readonly EmotifyDbContext _context;
 
-        public IndexModel(EmotifyDbContext context)
+        public IndexModel(
+            EmotifyDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<EmotifyUser> userManager)
+        : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
         public IList<Emote> Emotes { get; set; }
@@ -26,12 +30,11 @@ namespace Emotify.Pages.Emotes
         public async Task OnGetAsync()
         {
             var emoteQuery =
-                from e in _context.Emotes
+                from e in Context.Emotes
                 select e;
-            emoteQuery = emoteQuery.Include(emote => emote.Names);
             if (!string.IsNullOrEmpty(SearchString))
             {
-                emoteQuery = emoteQuery.Where(e => e.Names.Any(name => name.Name.Contains(SearchString)));
+                emoteQuery = emoteQuery.Where(e => e.Name.Contains(SearchString));
             }
             Emotes = await emoteQuery.ToListAsync();
         }

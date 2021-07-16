@@ -27,7 +27,7 @@ namespace Emotify.Models
                     new Emote()
                     {
                         OwnerUserId = admin.Id,
-                        Names = new List<EmoteName>() { new EmoteName() { Name = "dan" } }
+                        Name = "Dan"
                     }
                 );
                 await context.SaveChangesAsync();

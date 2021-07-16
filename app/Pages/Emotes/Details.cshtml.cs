@@ -6,16 +6,20 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 using Emotify.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace Emotify.Pages.Emotes
 {
-    public class DetailsModel : PageModel
+    public class DetailsModel : EmotifyBasePageModel
     {
-        private readonly EmotifyDbContext _context;
 
-        public DetailsModel(EmotifyDbContext context)
+        public DetailsModel(
+            EmotifyDbContext context,
+            IAuthorizationService authorizationService,
+            UserManager<EmotifyUser> userManager)
+        : base(context, authorizationService, userManager)
         {
-            _context = context;
         }
 
         public Emote Emote { get; set; }
@@ -27,7 +31,7 @@ namespace Emotify.Pages.Emotes
                 return NotFound();
             }
 
-            Emote = await _context.Emotes.Where(e => e.Id == id).Include(e => e.Names).FirstOrDefaultAsync();
+            Emote = await Context.GetEmoteById(id);
 
             if (Emote == null)
             {

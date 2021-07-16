@@ -32,6 +32,11 @@ namespace Emotify.Authorization
                 context.Succeed(requirement);
             }
 
+            // if (_userManager.IsInRoleAsync()) // admin?
+            // {
+            //     // https://github.com/dotnet/AspNetCore.Docs/issues/8502
+            // }
+
             return Task.CompletedTask;
         }
     }

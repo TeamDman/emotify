@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Emotify.Migrations
 {
     [DbContext(typeof(EmotifyDbContext))]
-    [Migration("20210712031710_main")]
+    [Migration("20210716205001_main")]
     partial class main
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,7 +23,10 @@ namespace Emotify.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("OwnerId")
+                    b.Property<int>("EmoteImageId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("Name")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("OwnerUserId")
@@ -32,22 +35,28 @@ namespace Emotify.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
+                    b.HasIndex("EmoteImageId");
+
+                    b.HasIndex("OwnerUserId");
 
                     b.ToTable("Emotes");
                 });
 
-            modelBuilder.Entity("Emotify.Models.EmoteName", b =>
+            modelBuilder.Entity("Emotify.Models.EmoteImage", b =>
                 {
-                    b.Property<int>("EmoteId")
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("Name")
+                    b.Property<byte[]>("Content")
+                        .HasColumnType("BLOB");
+
+                    b.Property<string>("Hash")
                         .HasColumnType("TEXT");
 
-                    b.HasKey("EmoteId", "Name");
+                    b.HasKey("Id");
 
-                    b.ToTable("EmoteName");
+                    b.ToTable("EmoteImage");
                 });
 
             modelBuilder.Entity("Emotify.Models.EmotifyUser", b =>
@@ -248,22 +257,19 @@ namespace Emotify.Migrations
 
             modelBuilder.Entity("Emotify.Models.Emote", b =>
                 {
-                    b.HasOne("Emotify.Models.EmotifyUser", "Owner")
-                        .WithMany("Emotes")
-                        .HasForeignKey("OwnerId");
-
-                    b.Navigation("Owner");
-                });
-
-            modelBuilder.Entity("Emotify.Models.EmoteName", b =>
-                {
-                    b.HasOne("Emotify.Models.Emote", "Emote")
-                        .WithMany("Names")
-                        .HasForeignKey("EmoteId")
+                    b.HasOne("Emotify.Models.EmoteImage", "EmoteImage")
+                        .WithMany()
+                        .HasForeignKey("EmoteImageId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Emote");
+                    b.HasOne("Emotify.Models.EmotifyUser", "Owner")
+                        .WithMany("Emotes")
+                        .HasForeignKey("OwnerUserId");
+
+                    b.Navigation("EmoteImage");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -315,11 +321,6 @@ namespace Emotify.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("Emotify.Models.Emote", b =>
-                {
-                    b.Navigation("Names");
                 });
 
             modelBuilder.Entity("Emotify.Models.EmotifyUser", b =>
