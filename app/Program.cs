@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Emotify.Models;
 using System;
 using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
 
 namespace Emotify
 {
@@ -13,6 +15,13 @@ namespace Emotify
         public static async Task Main(string[] args)
         {
             var host = CreateHostBuilder(args).Build();
+            var discord = host.Services.GetService<DiscordSocketClient>();
+            var discordLogger = host.Services.GetService<ILogger<IDiscordClient>>();
+            discord.Log += msg =>
+            {
+                discordLogger.LogInformation(msg.ToString());
+                return Task.CompletedTask;
+            };
 
             using (var scope = host.Services.CreateScope())
             {
@@ -28,7 +37,6 @@ namespace Emotify
                     logger.LogError(ex, "An error occurred seeding the DB.");
                 }
             }
-
             host.Run();
         }
 
@@ -36,6 +44,8 @@ namespace Emotify
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    // webBuilder.UseKestrel();
+                    webBuilder.UseUrls("http://localhost:80","http://192.168.3.51:80", "https://localhost:443","https://192.168.3.51:443");
                     webBuilder.UseStartup<Startup>();
                 });
     }

@@ -1,24 +1,19 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Discord;
+using Discord.WebSocket;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
-using Microsoft.AspNetCore.Mvc.Routing;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Emotify.Authorization;
-using Emotify.Models;
+using Microsoft.Extensions.Logging;
 
 namespace Emotify
 {
@@ -32,6 +27,8 @@ namespace Emotify
 
         public IConfiguration Configuration { get; }
         public IWebHostEnvironment Environment { get; }
+        
+
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -53,17 +50,23 @@ namespace Emotify
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 
             services.AddDefaultIdentity<Models.EmotifyUser>(options => options.SignIn.RequireConfirmedAccount = true)
-                    .AddRoles<IdentityRole>()
-                    .AddEntityFrameworkStores<EmotifyDbContext>();
+                .AddRoles<IdentityRole>()
+                .AddEntityFrameworkStores<EmotifyDbContext>();
 
             services.AddAuthorization(options =>
             {
                 // options.FallbackPolicy = new AuthorizationPolicyBuilder()
-                    // .Require
-                    // .RequireAuthenticatedUser()
-                    // .Build();
+                // .Require
+                // .RequireAuthenticatedUser()
+                // .Build();
             });
             services.AddScoped<IAuthorizationHandler, EmoteAuthorizationHandler>();
+
+
+            var discordClient = new DiscordSocketClient();
+            discordClient.LoginAsync(TokenType.Bot, Configuration["Discord:Token"]).GetAwaiter().GetResult();
+            discordClient.StartAsync().GetAwaiter().GetResult();
+            services.AddSingleton(discordClient);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -88,10 +91,7 @@ namespace Emotify
             app.UseAuthentication();
             app.UseAuthorization();
 
-            app.UseEndpoints(endpoints =>
-            {
-                endpoints.MapRazorPages();
-            });
+            app.UseEndpoints(endpoints => { endpoints.MapRazorPages(); });
         }
     }
 }

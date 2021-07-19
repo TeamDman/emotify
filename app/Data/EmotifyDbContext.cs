@@ -18,7 +18,7 @@ public class EmotifyDbContext : IdentityDbContext<EmotifyUser>
     public DbSet<Emotify.Models.EmoteImage> EmoteImages { get; set; }
     public async Task<Emote> GetEmoteById(int? id)
     {
-        return await Emotes.Where(e => e.Id == id).FirstOrDefaultAsync();
+        return await Emotes.AsQueryable().Where(e => e.Id == id).FirstOrDefaultAsync();
     }
 
     protected override void OnModelCreating(ModelBuilder builder)

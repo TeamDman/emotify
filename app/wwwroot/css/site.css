@@ -55,4 +55,12 @@ body {
 .emote-image {
   width: 100px;
   height: 100px;
+  -khtml-user-select: none;
+  -o-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+  
+  -webkit-user-drag: none; /* Prevents dragging of images/divs etc */
+  user-drag: none;
 }
