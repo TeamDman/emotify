@@ -6,5 +6,7 @@ namespace Emotify.Models
     public class EmotifyUser : IdentityUser
     {
         public virtual ICollection<Emote> Emotes { get; set; }
+        
+        public ulong VerifiedDiscordId { get; set; }
     }
 }

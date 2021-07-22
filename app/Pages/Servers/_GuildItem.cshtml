@@ -1,0 +1,21 @@
+@model GuildPair
+
+<div class="m-2">
+    <div class="col-md-12 p-2 bg-primary">
+        <input type="checkbox" class="form-check-input" name="SelectedEmoteIds" value="@Model.Enrollment.Id" />
+        <span>@Html.DisplayFor(model => Model.Guild.Name)</span>
+    </div>
+    <image class="emote-image" src="@Model.Guild.IconUrl" aria-label="Emote image"
+        onclick="toggleEmoteChecked(this)" draggable="false" ondragstart="preventDrag(e)"></image>
+    <div class="col-md-12 p-1 bg-secondary d-flex justify-content-around flex-row">
+        <a class="text-decoration-none" asp-page="./Edit" asp-route-id="@Model.Enrollment.Id">
+            <span class="fas fa-edit" aria-label="Edit"></span>
+        </a>
+        <a class="text-decoration-none" asp-page="./Details" asp-route-id="@Model.Enrollment.Id">
+            <span class="fas fa-info" aria-label="Details"></span>
+        </a>
+        <a class="text-decoration-none" asp-page="./Delete" asp-route-id="@Model.Enrollment.Id">
+            <span class="fas fa-trash" aria-label="Delete"></span>
+        </a>
+    </div>
+</div>

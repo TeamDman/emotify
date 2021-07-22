@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Discord.WebSocket;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -19,19 +20,22 @@ namespace Emotify.Pages.Emotes
         public string Name { get; set; }
     }
 
-    public class EditModel : EmotifyBasePageModel
+    public class EditModel : PageModel
     {
 
         public EditModel(
             EmotifyDbContext context,
-            IAuthorizationService authorizationService,
-            UserManager<EmotifyUser> userManager)
-        : base(context, authorizationService, userManager)
+            IAuthorizationService authorizationService)
         {
+            Context = context;
+            AuthorizationService = authorizationService;
         }
 
         [BindProperty]
         public EmoteEditVM Edit { get; set; }
+
+        public EmotifyDbContext Context { get; }
+        public IAuthorizationService AuthorizationService { get; }
 
         public async Task<IActionResult> OnGetAsync(int? id)
         {

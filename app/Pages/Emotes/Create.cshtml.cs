@@ -1,19 +1,16 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Emotify.Models;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using System.ComponentModel.DataAnnotations;
 using System.IO;
 using System.Security.Cryptography;
-using Emotify.Extensions;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using Emotify.Extensions;
+using Emotify.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 
 namespace Emotify.Pages.Emotes
 {
@@ -21,40 +18,43 @@ namespace Emotify.Pages.Emotes
     {
         [Required]
         public string Name { get; set; }
+
         [Required]
         public IFormFile File { get; set; }
     }
 
     [Authorize]
-    public class CreateModel : EmotifyBasePageModel
+    public class CreateModel : PageModel
     {
         public CreateModel(
             EmotifyDbContext context,
-            IAuthorizationService authorizationService,
             UserManager<EmotifyUser> userManager)
-        : base(context, authorizationService, userManager)
         {
+            Context = context;
+            UserManager = userManager;
         }
+
+        public UserManager<EmotifyUser> UserManager { get; }
+
+        [BindProperty]
+        public EmoteVM EmoteResponse { get; set; }
+
+        public EmotifyDbContext Context { get; }
 
         public IActionResult OnGet()
         {
             return Page();
         }
 
-        [BindProperty]
-        public EmoteVM EmoteResponse { get; set; }
-
         // To protect from overposting attacks, see https://aka.ms/RazorPagesCRUD
         public async Task<IActionResult> OnPostAsync()
         {
-            if (!ModelState.IsValid)
-            {
-                return Page();
-            }
-            Regex expression = new Regex(@"\.(png|jpg|jpeg|gif)");
+            if (!ModelState.IsValid) return Page();
+
+            var expression = new Regex(@"\.(png|jpg|jpeg|gif)");
             if (!expression.IsMatch(EmoteResponse.File.FileName))
             {
-                ModelState.AddModelError("EmoteResponse.File","Please select an image file.");
+                ModelState.AddModelError("EmoteResponse.File", "Please select an image file.");
                 return Page();
             }
 
@@ -63,13 +63,13 @@ namespace Emotify.Pages.Emotes
             var user = await UserManager.GetUserAsync(User);
 
             // create new emote
-            var emote = new Emote()
+            var emote = new Emote
             {
                 OwnerUserId = user.Id,
                 Name = EmoteResponse.Name
             };
 
-            using (var memoryStream = new MemoryStream())
+            await using (var memoryStream = new MemoryStream())
             {
                 await EmoteResponse.File.CopyToAsync(memoryStream);
                 if (memoryStream.Length >= 1024 * 256)
@@ -77,13 +77,14 @@ namespace Emotify.Pages.Emotes
                     ModelState.AddModelError("EmoteResponse.File", "The file must be 256KiB or smaller.");
                     return Page();
                 }
+
                 // Create image from file
-                byte[] imageArray = memoryStream.ToArray();
-                var image = new EmoteImage()
+                var imageArray = memoryStream.ToArray();
+                var image = new EmoteImage
                 {
                     Content = imageArray,
                     Hash = Convert.ToBase64String(MD5.Create().ComputeHash(imageArray)),
-                    FileType = System.IO.Path.GetExtension(EmoteResponse.File.FileName),
+                    FileType = Path.GetExtension(EmoteResponse.File.FileName)
                 };
 
                 // Use existing image entry if exists
@@ -94,7 +95,6 @@ namespace Emotify.Pages.Emotes
 
                 // Commit image to db
                 Context.EmoteImages.Add(image);
-
             }
 
             // Commit emote to db

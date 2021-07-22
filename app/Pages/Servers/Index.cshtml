@@ -1,5 +1,5 @@
 @page "{searchString?}"
-@model Emotify.Pages.Emotes.IndexModel
+@model Emotify.Pages.Servers.IndexModel
 
 @{
     ViewData["Title"] = "Index";
@@ -8,7 +8,7 @@
 <h1>Index</h1>
 
 <p>
-    <a asp-page="Create">Create New</a>
+    <a asp-page="Enroll">Enroll a server</a>
 </p>
 <div class="col-md-6">
     <form>
@@ -26,14 +26,14 @@
     </form>
 </div>
 <hr />
-<partial name="_EmoteItemScripts"></partial>
+@* <partial name="_EmoteItemScripts"></partial> *@
 <form method="post">
     <input class="btn btn-primary" type="submit" asp-page-handler="Copy" value="Save selected to my library" />
     @* <input class="btn btn-primary" type="submit" asp-page-handler="Copy" value="Copy" /> *@
     <div class="d-flex">
-        @foreach (var item in Model.Emotes)
+        @foreach (var item in Model.Guilds)
         {
-            <partial name="_EmoteItem" model="@item"></partial>
+            <partial name="_GuildItem" model="@item"></partial>
         }
     </div>
 </form>

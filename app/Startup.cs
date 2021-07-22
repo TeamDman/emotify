@@ -61,6 +61,7 @@ namespace Emotify
                 // .Build();
             });
             services.AddScoped<IAuthorizationHandler, EmoteAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, DiscordGuildEnrollmentAuthorizationHandler>();
 
 
             var discordClient = new DiscordSocketClient();

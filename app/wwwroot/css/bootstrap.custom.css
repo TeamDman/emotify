@@ -2034,7 +2034,7 @@ progress {
 }
 
 .form-control:disabled, .form-control[readonly] {
-  background-color: #e9ecef;
+  background-color: #202225;
   opacity: 1;
 }
 

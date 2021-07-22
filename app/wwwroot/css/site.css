@@ -60,7 +60,27 @@ body {
   -moz-user-select: none;
   -webkit-user-select: none;
   user-select: none;
-  
+
   -webkit-user-drag: none; /* Prevents dragging of images/divs etc */
   user-drag: none;
 }
+
+.guild-image {
+  width: 75px;
+  height: 75px;
+  -khtml-user-select: none;
+  -o-user-select: none;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  user-select: none;
+
+  -webkit-user-drag: none; /* Prevents dragging of images/divs etc */
+  user-drag: none;
+  
+  border-radius: 50%;
+}
+
+.section-header {
+  flex-basis: 100%;
+}
+
