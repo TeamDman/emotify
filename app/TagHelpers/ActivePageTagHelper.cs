@@ -1,4 +1,6 @@
 using System;
+using System.Linq;
+using System.Reflection;
 using System.Text.Encodings.Web;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -31,20 +33,27 @@ namespace Emotify.TagHelpers
             _linkGenerator = generator;
         }
 
-        public override void Process(TagHelperContext context, TagHelperOutput output)
+        public override void Process(
+            TagHelperContext context,
+            TagHelperOutput output
+        )
         {
             // grab attribute value
-            var targetPage = output.Attributes[_for].Value.ToString();
+            var targetPages = output.Attributes[_for].Value.ToString();
             // remove from html so user doesn't see it
             output.Attributes.Remove(output.Attributes[_for]);
-            
-            // get the URI that corresponds to the attribute value
-            var targetUri = _linkGenerator.GetUriByPage(_httpAccess.HttpContext, page: targetPage);
+
             // get the URI that corresponds to the current page's action
             var currentUri = _urlHelper.ActionLink();
 
-            // if they match, then add the "active" CSS class
-            if (targetUri == currentUri) {
+            // check all targets against current URI
+            var active = targetPages.Split(";")
+                .Select(target => _linkGenerator.GetUriByPage(_httpAccess.HttpContext, target))
+                .Any(targetUri => targetUri == currentUri);
+            
+            // if there's a match, then add the "active" CSS class
+            if (active)
+            {
                 output.AddClass("active", HtmlEncoder.Default);
             }
         }
