@@ -4,8 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Emotify.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Razor.Language;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace Emotify.Extensions
 {
@@ -43,6 +45,30 @@ namespace Emotify.Extensions
                     return result.Succeeded;
                 }
             );
+        }
+
+        public static async Task<IdentityResult> MigrateDataAndDelete(
+            this UserManager<EmotifyUser> manager,
+            EmotifyUser user,
+            EmotifyDbContext context
+        )
+        {
+            var placeholderUser = new EmotifyUser { UserName = "DeletedUser" };
+            await manager.CreateAsync(placeholderUser);
+            IQueryable<UserOwnable>[] toMove = { context.Emotes.AsQueryable(), context.EnrolledGuilds };
+            foreach (var items in toMove)
+            {
+                await items.ForEachAsync(item =>
+                {
+                    item.Owner = placeholderUser;
+                    item.OwnerUserId = placeholderUser.Id;
+                    context.Entry(item).State = EntityState.Modified;
+                });
+            }
+
+            await context.SaveChangesAsync();
+            
+            return await manager.DeleteAsync(user);
         }
     }
 }

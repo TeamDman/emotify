@@ -6,16 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Emotify.Models
 {
-    public class Emote
+    public class Emote : UserOwnable
     {
         public int Id { get; set; }
-
-        [MaxLength(128)]
-        public virtual string OwnerUserId { get; set; }
-        
-        [ForeignKey(nameof(OwnerUserId))]
-        public virtual EmotifyUser Owner { get; set; }
-
 
         public string Name { get; set; }
 

@@ -44,8 +44,8 @@ namespace Emotify
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    // webBuilder.UseKestrel();
-                    webBuilder.UseUrls("http://localhost:80","http://192.168.3.51:80", "https://localhost:443","https://192.168.3.51:443");
+                    webBuilder.UseKestrel();
+                    // webBuilder.UseUrls("http://localhost:80","http://192.168.3.51:80", "https://localhost:443","https://192.168.3.51:443");
                     webBuilder.UseStartup<Startup>();
                 });
     }
