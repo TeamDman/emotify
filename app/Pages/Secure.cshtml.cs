@@ -23,13 +23,11 @@ namespace Emotify.Pages
     {
         private readonly ILogger<SecureModel> _logger;
         private readonly IConfiguration _configuration;
-        private readonly UserManager<EmotifyUser> _userManager;
 
-        public SecureModel(ILogger<SecureModel> logger, IConfiguration configuration, UserManager<EmotifyUser> userManager)
+        public SecureModel(ILogger<SecureModel> logger, IConfiguration configuration)
         {
             _logger = logger;
             _configuration = configuration;
-            _userManager = userManager;
         }
 
         public async void OnGetAsync()
@@ -70,27 +68,27 @@ namespace Emotify.Pages
             }
 
             return;
-            {
-                EmotifyUser user = await _userManager.GetUserAsync(User);
-                string ConsumerKey = _configuration["Discord:ClientId"];
-                string ConsumerToken = _configuration["Discord:ClientSecret"];
-                string AccessToken = "";
-                string AccessTokenSecret = await _userManager.GetAuthenticationTokenAsync(user, "discord", "AuthenticatorKey");
-                string RequestURL = "https://discord.com/api/users/@me/guilds";
-                OAuthRequest client = OAuthRequest.ForProtectedResource("GET", ConsumerKey, ConsumerToken, AccessToken, AccessTokenSecret);
-                client.RequestUrl = RequestURL;
-                string auth = client.GetAuthorizationHeader();
-                HttpWebRequest request = WebRequest.CreateHttp(client.RequestUrl);
-                request.Headers.Add("Authorization", auth);
-                Console.WriteLine("Calling " + RequestURL);
-
-                HttpWebResponse response = (HttpWebResponse)request.GetResponse();
-                Stream dataStream = response.GetResponseStream();
-                StreamReader reader = new StreamReader(dataStream);
-                string strResponse = reader.ReadToEnd();
-                Console.WriteLine("Got response");
-                Console.WriteLine(strResponse);
-            }
+            // {
+            //     EmotifyUser user = await _userManager.GetUserAsync(User);
+            //     string ConsumerKey = _configuration["Discord:ClientId"];
+            //     string ConsumerToken = _configuration["Discord:ClientSecret"];
+            //     string AccessToken = "";
+            //     string AccessTokenSecret = await _userManager.GetAuthenticationTokenAsync(user, "discord", "AuthenticatorKey");
+            //     string RequestURL = "https://discord.com/api/users/@me/guilds";
+            //     OAuthRequest client = OAuthRequest.ForProtectedResource("GET", ConsumerKey, ConsumerToken, AccessToken, AccessTokenSecret);
+            //     client.RequestUrl = RequestURL;
+            //     string auth = client.GetAuthorizationHeader();
+            //     HttpWebRequest request = WebRequest.CreateHttp(client.RequestUrl);
+            //     request.Headers.Add("Authorization", auth);
+            //     Console.WriteLine("Calling " + RequestURL);
+            //
+            //     HttpWebResponse response = (HttpWebResponse)request.GetResponse();
+            //     Stream dataStream = response.GetResponseStream();
+            //     StreamReader reader = new StreamReader(dataStream);
+            //     string strResponse = reader.ReadToEnd();
+            //     Console.WriteLine("Got response");
+            //     Console.WriteLine(strResponse);
+            // }
         }
     }
 }

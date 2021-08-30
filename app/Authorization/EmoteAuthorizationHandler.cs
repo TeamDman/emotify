@@ -3,18 +3,20 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
+using Emotify.Services;
 
 namespace Emotify.Authorization
 {
     public class EmoteAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Emote>
     {
-        UserManager<EmotifyUser> _userManager;
+        private readonly UserHelper _userHelper;
 
-        public EmoteAuthorizationHandler(UserManager<EmotifyUser> userManager)
+        public EmoteAuthorizationHandler(
+            UserHelper userHelper
+        )
         {
-            _userManager = userManager;
+            _userHelper = userHelper;
         }
-
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, Emote resource)
         {
             if (context.User == null || resource == null) 
@@ -27,7 +29,7 @@ namespace Emotify.Authorization
                 return Task.CompletedTask;
             }
 
-            if (resource.OwnerUserId == _userManager.GetUserId(context.User))
+            if (resource.OwnerUserId == _userHelper.GetUserId(context.User))
             {
                 context.Succeed(requirement);
             }

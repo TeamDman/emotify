@@ -1,27 +1,24 @@
 @using Microsoft.AspNetCore.Identity
 @using Emotify.Models
-@inject SignInManager<EmotifyUser> SignInManager
-@inject UserManager<EmotifyUser> UserManager
+@using Emotify.Services
+@inject UserHelper UserHelper
 
 <ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
+@if (UserHelper.IsSignedIn(User))
 {
     <li navigation-active-for="/Account/Manage/Index" class="nav-item">
-        <a id="manage" class="nav-link" asp-area="Identity" asp-page="/Account/Manage/Index" title="Manage">Hello @UserManager.GetUserName(User)!</a>
+        <a id="manage" class="nav-link" asp-page="/Account" title="Manage">Hello @UserHelper.GetDisplayName(User)!</a>
     </li>
-    <li navigation-active-for="/Account/Logout" class="nav-item">
-        <form id="logoutForm" class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
+    <li class="nav-item">
+        <form id="logoutForm" class="form-inline" asp-page="/Logout" asp-route-returnUrl="@Url.Page("/Index", new { area = "" })">
             <button id="logout" type="submit" class="nav-link btn btn-link">Logout</button>
         </form>
     </li>
 }
 else
 {
-    <li navigation-active-for="/Account/Register" class="nav-item">
-        <a class="nav-link" id="register" asp-area="Identity" asp-page="/Account/Register">Register</a>
-    </li>
-    <li navigation-active-for="/Account/Login" class="nav-item">
-        <a class="nav-link" id="login" asp-area="Identity" asp-page="/Account/Login">Login</a>
+    <li class="nav-item">
+        <a class="nav-link" id="login" asp-page="/Login" asp-route-returnUrl="@Context.Request.Path">Login with Discord</a>
     </li>
 }
 </ul>

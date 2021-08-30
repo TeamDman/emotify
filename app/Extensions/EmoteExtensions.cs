@@ -9,7 +9,7 @@ namespace Emotify.Extensions
 {
     public static class EmoteExtensions
     {
-        public async static Task<bool> CanModify(this Emote emote, EmotifyUser user, RoleManager<EmotifyUser> manager)
+        public async static Task<bool> CanModify(this Emote emote, User user, RoleManager<User> manager)
         {
             if (user.Id == emote.OwnerUserId)
             {

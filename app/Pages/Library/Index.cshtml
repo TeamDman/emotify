@@ -35,7 +35,7 @@
         </div>
         <div class="d-flex align-content-start col-md-6 m-2 flex-wrap justify-content-center">
             <div class="section-header bg-primary p-2">Servers</div>
-            @foreach (var server in Model.DiscordClient.Guilds.OrderBy(g => g.Name))
+            @foreach (var server in Model.Guilds)
             {
                 <partial name="_GuildItem" model="@server"></partial>
             }

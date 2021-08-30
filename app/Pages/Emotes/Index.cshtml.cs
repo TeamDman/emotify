@@ -3,20 +3,27 @@ using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Emotify.Models;
+using Emotify.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Emotify.Pages.Emotes
 {
     public class IndexModel : PageModel
     {
-        
+        private readonly UserHelper _userHelper;
+        private readonly EmotifyDbContext _context;
+
         public IndexModel(
-            EmotifyDbContext context)
+            EmotifyDbContext context,
+            UserHelper userHelper
+        )
         {
-            Context = context;
+            _context = context;
+            _userHelper = userHelper;
         }
 
 
@@ -25,33 +32,33 @@ namespace Emotify.Pages.Emotes
         // Filters
         [BindProperty(SupportsGet = true)]
         public string SearchString { get; set; }
-        
+
         [BindProperty(SupportsGet = true)]
         [DisplayName("Show mine")]
-        public bool ShowMine {get; set;} = true;
+        public bool ShowMine { get; set; } = true;
 
 
         [BindProperty]
-        public IList<int> SelectedEmoteIds {get; set;}
-
-        public EmotifyDbContext Context { get; }
-        public UserManager<EmotifyUser> UserManager { get; }
+        public IList<int> SelectedEmoteIds { get; set; }
 
         public async Task OnGetAsync()
         {
+
             // Get emotes and their images
             var emoteQuery =
-                from e in Context.Emotes.Include(e => e.EmoteImage)
+                from e in _context.Emotes.Include(e => e.EmoteImage)
                 select e;
             // If search query provided, filter results
             if (!string.IsNullOrEmpty(SearchString))
             {
                 emoteQuery = emoteQuery.Where(e => e.Name.Contains(SearchString));
             }
+
             if (!ShowMine)
             {
-                emoteQuery = emoteQuery.Where(e => e.OwnerUserId != UserManager.GetUserId(User));
+                emoteQuery = emoteQuery.Where(e => e.OwnerUserId != _userHelper.GetUserId(User));
             }
+
             // Return result list
             Emotes = await emoteQuery.ToListAsync();
         }
@@ -62,6 +69,7 @@ namespace Emotify.Pages.Emotes
             {
                 return Page();
             }
+
             return RedirectToPage("./Index");
         }
     }

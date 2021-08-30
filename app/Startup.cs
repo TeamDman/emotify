@@ -16,9 +16,13 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Emotify.Authorization;
+using Emotify.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
 
 namespace Emotify
@@ -53,45 +57,32 @@ namespace Emotify
 
             services.AddRazorPages().AddRazorRuntimeCompilation();
 
-            // services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            // services.AddHttpContextAccessor();
+            // for url highlight tag helper
+            services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
-
-            services.AddIdentity<Models.EmotifyUser, IdentityRole>()
-                .AddEntityFrameworkStores<EmotifyDbContext>();
-
-            services.AddMvc()
-                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1)
-                .AddRazorPagesOptions(
-                    options =>
-                    {
-                        options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
-                        options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
-                    });
-            services.ConfigureApplicationCookie(
-                options =>
-                {
-                    options.LoginPath = $"/Identity/Account/Login";
-                    options.LogoutPath = "/Identity/Account/Logout";
-                    options.AccessDeniedPath = "/Identity/Account/AccessDenied";
-                }
-            );
-
-            services.AddAuthorization(
-                options =>
-                {
-                    // options.FallbackPolicy = new AuthorizationPolicyBuilder()
-                    // .Require
-                    // .RequireAuthenticatedUser()
-                    // .Build();
-                }
-            );
+            
+            
+            // services.AddIdentity<Models.EmotifyUser, IdentityRole>()
+            //     .AddEntityFrameworkStores<EmotifyDbContext>();
+            
+            // services.AddAuthorization(
+            //     options =>
+            //     {
+            //         // options.FallbackPolicy = new AuthorizationPolicyBuilder()
+            //         // .Require
+            //         // .RequireAuthenticatedUser()
+            //         // .Build();
+            //     }
+            // );
             services.AddAuthentication(
                     options =>
                     {
-
+                        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+                        options.DefaultChallengeScheme = "scheme.discord";
+                        // options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
                     }
                 )
+                .AddCookie()
                 .AddDiscord(
                     "scheme.discord",
                     options =>
@@ -100,23 +91,24 @@ namespace Emotify
                         options.ClientSecret = Configuration["Discord:ClientSecret"];
                         options.SaveTokens = true;
                         options.Scope.Add("guilds");
-                        options.Events.OnCreatingTicket = ctx =>
-                        {
-                            ctx.RunClaimActions();
-                            var tokens = ctx.Properties.GetTokens().ToList();
-                            tokens.Add(new AuthenticationToken()
-                            {
-                                Name = "TicketCreated",
-                                Value = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)
-                            });
-                            ctx.Properties.StoreTokens(tokens);
-                            return Task.CompletedTask;
-                        };
+                        // options.Events.OnCreatingTicket = ctx =>
+                        // {
+                        //     ctx.RunClaimActions();
+                        //     var tokens = ctx.Properties.GetTokens().ToList();
+                        //     tokens.Add(new AuthenticationToken()
+                        //     {
+                        //         Name = "TicketCreated",
+                        //         Value = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)
+                        //     });
+                        //     ctx.Properties.StoreTokens(tokens);
+                        //     return Task.CompletedTask;
+                        // };
                     }
                 );
             services.AddScoped<IAuthorizationHandler, EmoteAuthorizationHandler>();
             services.AddScoped<IAuthorizationHandler, DiscordGuildEnrollmentAuthorizationHandler>();
 
+            services.AddScoped<UserHelper>();
 
             var discordClient = new DiscordSocketClient();
             discordClient.LoginAsync(TokenType.Bot, Configuration["Discord:Token"]).GetAwaiter().GetResult();

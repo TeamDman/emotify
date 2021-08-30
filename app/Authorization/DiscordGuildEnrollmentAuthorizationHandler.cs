@@ -5,18 +5,20 @@ using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using System.Threading.Tasks;
 using Discord.WebSocket;
+using Emotify.Services;
 
 namespace Emotify.Authorization
 {
     public class DiscordGuildEnrollmentAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, SocketGuild>
     {
-        UserManager<EmotifyUser> _userManager;
+        private readonly UserHelper _userHelper;
 
-        public DiscordGuildEnrollmentAuthorizationHandler(UserManager<EmotifyUser> userManager)
+        public DiscordGuildEnrollmentAuthorizationHandler(
+            UserHelper userHelper
+        )
         {
-            _userManager = userManager;
+            _userHelper = userHelper;
         }
-
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, SocketGuild resource)
         {
             if (resource == null || requirement != DiscordOperations.EnrollGuild) 
@@ -24,9 +26,9 @@ namespace Emotify.Authorization
                 return;
             }
 
-            var user = await _userManager.GetUserAsync(context.User);
+            var userId = _userHelper.GetUserId(context.User);
             bool hasEmojiPerms = resource.Users
-                .Where(u => u.Id == user.VerifiedDiscordId)
+                .Where(u => u.Id == userId)
                 .Any(u => u.GuildPermissions.ManageEmojis);
             if (hasEmojiPerms)
             {

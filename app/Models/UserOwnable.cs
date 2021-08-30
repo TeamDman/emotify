@@ -7,9 +7,9 @@ namespace Emotify.Models
     {
         
         [MaxLength(128)]
-        public virtual string OwnerUserId { get; set; }
+        public virtual ulong OwnerUserId { get; set; }
         
         [ForeignKey(nameof(OwnerUserId))]
-        public virtual EmotifyUser Owner { get; set; }
+        public virtual User Owner { get; set; }
     }
 }

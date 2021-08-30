@@ -6,6 +6,7 @@ using Discord;
 using Discord.WebSocket;
 using Emotify.Extensions;
 using Emotify.Models;
+using Emotify.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -20,15 +21,19 @@ namespace Emotify.Pages.Servers
 
     public class IndexModel : PageModel
     {
+        
+        private readonly EmotifyDbContext _context;
+        private readonly UserHelper _userHelper;
+        private readonly DiscordSocketClient _discordClient;
         public IndexModel(
             EmotifyDbContext context,
-            UserManager<EmotifyUser> userManager,
+            UserHelper userHelper,
             DiscordSocketClient discordSocketClient
         )
         {
-            Context = context;
-            UserManager = userManager;
-            DiscordClient = discordSocketClient;
+            _context = context;
+            _userHelper = userHelper;
+            _discordClient = discordSocketClient;
         }
 
 
@@ -46,23 +51,24 @@ namespace Emotify.Pages.Servers
         [BindProperty]
         public IList<int> SelectedGuildIds { get; set; }
 
-        public EmotifyDbContext Context { get; }
-        public UserManager<EmotifyUser> UserManager { get; }
-        public DiscordSocketClient DiscordClient { get; }
 
         public async Task OnGetAsync()
         {
             // Get emotes and their images
             var guildQuery =
-                from e in Context.EnrolledGuilds.AsAsyncEnumerable()
-                join g in DiscordClient.Guilds.AsAsyncEnumerable() on e.Id equals g.Id
+                from e in _context.EnrolledGuilds.AsAsyncEnumerable()
+                join g in _discordClient.Guilds.AsAsyncEnumerable() on e.Id equals g.Id
                 select new GuildPair(e, g);
             // If search query provided, filter results
             if (!string.IsNullOrEmpty(SearchString))
                 guildQuery = guildQuery.Where(x => x.Guild.Name.Contains(SearchString));
 
             // If not showing mine, filter out mine
-            if (!ShowMine) guildQuery = guildQuery.Where(x => x.Enrollment.OwnerUserId != UserManager.GetUserId(User));
+            if (!ShowMine)
+            {
+                var userId = _userHelper.GetUserId(User);
+                guildQuery = guildQuery.Where(x => x.Enrollment.OwnerUserId != userId);
+            }
 
             // Return result list
             Guilds = await guildQuery.ToListAsync();

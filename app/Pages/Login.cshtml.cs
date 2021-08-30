@@ -1,20 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Emotify.Services;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
 
 namespace Emotify.Pages
 {
-    public class IndexModel : PageModel
+    [Authorize]
+    public class Login : PageModel
     {
-        public void OnGet()
+        public IActionResult OnGet(string returnUrl = "/Index")
         {
-
+            return Redirect(returnUrl);
         }
     }
 }

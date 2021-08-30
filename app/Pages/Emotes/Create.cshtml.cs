@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Emotify.Extensions;
 using Emotify.Models;
+using Emotify.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -25,21 +26,23 @@ namespace Emotify.Pages.Emotes
 
     [Authorize]
     public class CreateModel : PageModel
-    {
+    {        
+        private readonly UserHelper _userHelper; 
+        private readonly EmotifyDbContext _context;
+
         public CreateModel(
             EmotifyDbContext context,
-            UserManager<EmotifyUser> userManager)
+            UserHelper userHelper)
         {
-            Context = context;
-            UserManager = userManager;
+            _context = context;
+            _userHelper = userHelper;
         }
 
-        public UserManager<EmotifyUser> UserManager { get; }
+
 
         [BindProperty]
         public EmoteVM EmoteResponse { get; set; }
 
-        public EmotifyDbContext Context { get; }
 
         public IActionResult OnGet()
         {
@@ -57,15 +60,11 @@ namespace Emotify.Pages.Emotes
                 ModelState.AddModelError("EmoteResponse.File", "Please select an image file.");
                 return Page();
             }
-
-
-            // get current user
-            var user = await UserManager.GetUserAsync(User);
-
+            
             // create new emote
             var emote = new Emote
             {
-                OwnerUserId = user.Id,
+                OwnerUserId = _userHelper.GetUserId(User),
                 Name = EmoteResponse.Name
             };
 
@@ -88,20 +87,20 @@ namespace Emotify.Pages.Emotes
                 };
 
                 // Use existing image entry if exists
-                image = await image.FindExistingOrDefault(Context);
+                image = await image.FindExistingOrDefault(_context);
 
                 // Assign image to emote
                 emote.EmoteImage = image;
 
                 // Commit image to db
-                Context.EmoteImages.Add(image);
+                _context.EmoteImages.Add(image);
             }
 
             // Commit emote to db
-            Context.Emotes.Add(emote);
+            _context.Emotes.Add(emote);
 
             // Save new records
-            await Context.SaveChangesAsync();
+            await _context.SaveChangesAsync();
 
             return RedirectToPage("./Index");
         }

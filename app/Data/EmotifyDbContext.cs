@@ -7,7 +7,7 @@ using Emotify.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.AspNetCore.Identity;
 
-public class EmotifyDbContext : IdentityDbContext<EmotifyUser>
+public class EmotifyDbContext : DbContext
 {
     public EmotifyDbContext(DbContextOptions<EmotifyDbContext> options)
         : base(options)
@@ -18,6 +18,8 @@ public class EmotifyDbContext : IdentityDbContext<EmotifyUser>
     public DbSet<EmoteImage> EmoteImages { get; set; }
 
     public DbSet<EnrolledGuild> EnrolledGuilds { get; set; }
+    
+    public DbSet<User> Users { get; set; }
 
     public async Task<Emote> GetEmoteById(int? id)
     {
