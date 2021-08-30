@@ -27,15 +27,12 @@ namespace Emotify.Pages.Emotes
     [Authorize]
     public class CreateModel : PageModel
     {        
-        private readonly UserHelper _userHelper; 
         private readonly EmotifyDbContext _context;
 
         public CreateModel(
-            EmotifyDbContext context,
-            UserHelper userHelper)
+            EmotifyDbContext context)
         {
             _context = context;
-            _userHelper = userHelper;
         }
 
 
@@ -64,7 +61,7 @@ namespace Emotify.Pages.Emotes
             // create new emote
             var emote = new Emote
             {
-                OwnerUserId = _userHelper.GetUserId(User),
+                OwnerUserId = UserHelper.GetUserId(User),
                 Name = EmoteResponse.Name
             };
 

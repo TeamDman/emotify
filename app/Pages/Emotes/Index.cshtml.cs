@@ -14,16 +14,13 @@ namespace Emotify.Pages.Emotes
 {
     public class IndexModel : PageModel
     {
-        private readonly UserHelper _userHelper;
         private readonly EmotifyDbContext _context;
 
         public IndexModel(
-            EmotifyDbContext context,
-            UserHelper userHelper
+            EmotifyDbContext context
         )
         {
             _context = context;
-            _userHelper = userHelper;
         }
 
 
@@ -56,7 +53,7 @@ namespace Emotify.Pages.Emotes
 
             if (!ShowMine)
             {
-                emoteQuery = emoteQuery.Where(e => e.OwnerUserId != _userHelper.GetUserId(User));
+                emoteQuery = emoteQuery.Where(e => e.OwnerUserId != UserHelper.GetUserId(User));
             }
 
             // Return result list

@@ -9,14 +9,6 @@ namespace Emotify.Authorization
 {
     public class EmoteAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, Emote>
     {
-        private readonly UserHelper _userHelper;
-
-        public EmoteAuthorizationHandler(
-            UserHelper userHelper
-        )
-        {
-            _userHelper = userHelper;
-        }
         protected override Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, Emote resource)
         {
             if (context.User == null || resource == null) 
@@ -29,7 +21,7 @@ namespace Emotify.Authorization
                 return Task.CompletedTask;
             }
 
-            if (resource.OwnerUserId == _userHelper.GetUserId(context.User))
+            if (resource.OwnerUserId == UserHelper.GetUserId(context.User))
             {
                 context.Succeed(requirement);
             }

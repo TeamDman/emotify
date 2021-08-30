@@ -10,17 +10,15 @@ namespace Emotify.Pages
     public class Logout : PageModel
     {
         private readonly ILogger<Logout> _logger;
-        private readonly UserHelper _userHelper;
 
-        public Logout(ILogger<Logout> logger, UserHelper userHelper)
+        public Logout(ILogger<Logout> logger)
         {
             _logger = logger;
-            _userHelper = userHelper;
         }
         
         public async Task<IActionResult> OnPostAsync()
         {
-            var name = _userHelper.GetDisplayName(User);
+            var name = UserHelper.GetDisplayName(User);
             _logger.LogInformation("Logging out {Name}", name);
             await HttpContext.SignOutAsync();
             return RedirectToPage("/Index");

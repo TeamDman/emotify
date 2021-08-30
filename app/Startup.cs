@@ -93,14 +93,26 @@ namespace Emotify
                         options.Scope.Add("guilds");
                         // options.Events.OnCreatingTicket = ctx =>
                         // {
-                        //     ctx.RunClaimActions();
                         //     var tokens = ctx.Properties.GetTokens().ToList();
                         //     tokens.Add(new AuthenticationToken()
                         //     {
                         //         Name = "TicketCreated",
                         //         Value = DateTime.UtcNow.ToString(CultureInfo.InvariantCulture)
                         //     });
+                        //     tokens.Add(new AuthenticationToken()
+                        //     {
+                        //         Name = "DiscordToken",
+                        //         Value = ctx.AccessToken
+                        //     });
                         //     ctx.Properties.StoreTokens(tokens);
+                        //     return Task.CompletedTask;
+                        // };
+                        // options.Events.OnTicketReceived = ctx =>
+                        // {
+                        //     if (!ctx.Principal.HasClaim(c => c.Type == "DiscordToken"))
+                        //     {
+                        //         ctx.Principal.Identities.First().AddClaim(new Claim("DiscordToken", "12#"));
+                        //     };
                         //     return Task.CompletedTask;
                         // };
                     }
@@ -109,6 +121,7 @@ namespace Emotify
             services.AddScoped<IAuthorizationHandler, DiscordGuildEnrollmentAuthorizationHandler>();
 
             services.AddScoped<UserHelper>();
+            services.AddSingleton<UserGuildStore>();
 
             var discordClient = new DiscordSocketClient();
             discordClient.LoginAsync(TokenType.Bot, Configuration["Discord:Token"]).GetAwaiter().GetResult();

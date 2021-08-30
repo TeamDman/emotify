@@ -15,17 +15,14 @@ namespace Emotify.Pages.Library
     public class IndexModel : PageModel
     {
         
-        private readonly UserHelper _userHelper;
         private readonly EmotifyDbContext _context;
         private readonly DiscordSocketClient _discordClient;
         public IndexModel(
             EmotifyDbContext context,
-            DiscordSocketClient discordClient,
-            UserHelper userHelper
+            DiscordSocketClient discordClient
         )
         {
             _context = context;
-            _userHelper = userHelper;
             _discordClient = discordClient;
         }
 
@@ -61,7 +58,7 @@ namespace Emotify.Pages.Library
             if (!string.IsNullOrEmpty(SearchString)) emoteQuery = emoteQuery.Where(e => e.Name.Contains(SearchString));
             if (!ShowMine)
             {
-                var userId = _userHelper.GetUserId(User);
+                var userId = UserHelper.GetUserId(User);
                 emoteQuery = emoteQuery.Where(e => e.OwnerUserId != userId);
             }
             

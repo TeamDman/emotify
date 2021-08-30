@@ -14,5 +14,7 @@ namespace Emotify.Models
         public string Email { get; set; }
         public string AvatarUrl { get; set; }
         public string AvatarHash { get; set; }
+        
+        public string AccessToken { get; set; }
     }
 }

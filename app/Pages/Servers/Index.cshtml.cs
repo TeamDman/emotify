@@ -23,16 +23,13 @@ namespace Emotify.Pages.Servers
     {
         
         private readonly EmotifyDbContext _context;
-        private readonly UserHelper _userHelper;
         private readonly DiscordSocketClient _discordClient;
         public IndexModel(
             EmotifyDbContext context,
-            UserHelper userHelper,
             DiscordSocketClient discordSocketClient
         )
         {
             _context = context;
-            _userHelper = userHelper;
             _discordClient = discordSocketClient;
         }
 
@@ -66,7 +63,7 @@ namespace Emotify.Pages.Servers
             // If not showing mine, filter out mine
             if (!ShowMine)
             {
-                var userId = _userHelper.GetUserId(User);
+                var userId = UserHelper.GetUserId(User);
                 guildQuery = guildQuery.Where(x => x.Enrollment.OwnerUserId != userId);
             }
 

@@ -9,3 +9,18 @@
         <dd>@claim.Value</dd>
     }
 </dl>
+<ul>
+    @foreach (var guild in Model.Guilds)
+    {
+        <li>
+            <img src="@guild.iconUrl"/>
+            <p>@guild.name</p>
+            <ul style="margin-left:10px">
+                @foreach (var f in guild.features)
+                {
+                    <li>@f</li>
+                }
+            </ul>
+        </li>
+    }
+</ul>

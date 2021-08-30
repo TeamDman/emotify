@@ -11,14 +11,6 @@ namespace Emotify.Authorization
 {
     public class DiscordGuildEnrollmentAuthorizationHandler : AuthorizationHandler<OperationAuthorizationRequirement, SocketGuild>
     {
-        private readonly UserHelper _userHelper;
-
-        public DiscordGuildEnrollmentAuthorizationHandler(
-            UserHelper userHelper
-        )
-        {
-            _userHelper = userHelper;
-        }
         protected override async Task HandleRequirementAsync(AuthorizationHandlerContext context, OperationAuthorizationRequirement requirement, SocketGuild resource)
         {
             if (resource == null || requirement != DiscordOperations.EnrollGuild) 
@@ -26,7 +18,7 @@ namespace Emotify.Authorization
                 return;
             }
 
-            var userId = _userHelper.GetUserId(context.User);
+            var userId = UserHelper.GetUserId(context.User);
             bool hasEmojiPerms = resource.Users
                 .Where(u => u.Id == userId)
                 .Any(u => u.GuildPermissions.ManageEmojis);
