@@ -60,7 +60,7 @@ namespace Emotify.Pages.Emotes
             Emotes = await emoteQuery.ToListAsync();
         }
 
-        public async Task<IActionResult> OnPostCopyAsync()
+        public IActionResult OnPostCopyAsync()
         {
             if (!ModelState.IsValid)
             {

@@ -29,7 +29,8 @@ namespace Emotify
 
                 try
                 {
-                    await SeedData.Initialize(services);
+                    // todo: make async, add content
+                    SeedData.Initialize(services);
                 }
                 catch (Exception ex)
                 {

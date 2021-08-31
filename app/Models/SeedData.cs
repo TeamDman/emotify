@@ -12,7 +12,7 @@ namespace Emotify.Models
 {
     public static class SeedData
     {
-        public static async Task Initialize(IServiceProvider serviceProvider)
+        public static void Initialize(IServiceProvider serviceProvider)
         {
             using (var context = new EmotifyDbContext(serviceProvider.GetRequiredService<DbContextOptions<EmotifyDbContext>>()))
             {

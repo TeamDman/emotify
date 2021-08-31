@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Emotify.Data.Deserialization;
 using Emotify.Models;
@@ -33,20 +34,12 @@ namespace Emotify.Pages
             _userGuildStore = userGuildStore;
         }
         
-        public UserGuild[] Guilds { get; set; }
+        public List<UserGuild> Guilds { get; set; }
 
         public async Task OnGetAsync()
         {
-            // read external identity from the temporary cookie
-            var context = await HttpContext.AuthenticateAsync("scheme.discord");
-            if (context.Succeeded != true)
-            {
-                Page();
-                return;
-            }
-
             var user = await _userHelper.GetOrCreateUser(User);
-            Guilds = await _userGuildStore.GetGuilds(user);
+            Guilds = await _userGuildStore.GetGuilds(user).ToListAsync();
         }
     }
 }

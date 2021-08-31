@@ -9,7 +9,7 @@ namespace Emotify.Services
     {
         private readonly Dictionary<ulong, UserGuild[]> _cache = new();
         
-        public async Task<UserGuild[]> GetGuilds(
+        public async IAsyncEnumerable<UserGuild> GetGuilds(
             User user,
             bool forceRefresh = false
         )
@@ -20,7 +20,10 @@ namespace Emotify.Services
                 _cache[user.Id] = guilds;
             }
 
-            return _cache[user.Id];
+            foreach (var guild in _cache[user.Id])
+            {
+                yield return guild;
+            }
         }
     }
 }

@@ -4,83 +4,126 @@ for details on configuring this project to bundle and minify static web assets. 
 
 /* Provide sufficient contrast against white background */
 a {
-  /* color: #0366d6; */
-  color: rgb(0, 175, 244);
+    /* color: #0366d6; */
+    color: rgb(0, 175, 244);
 }
-
 
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
+
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .box-shadow {
-  box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
+    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
 }
 
 button.accept-policy {
-  font-size: 1rem;
-  line-height: inherit;
+    font-size: 1rem;
+    line-height: inherit;
 }
 
 /* Sticky footer styles
 -------------------------------------------------- */
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  /* Margin bottom by footer height */
-  margin-bottom: 60px;
-}
-.footer {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  white-space: nowrap;
-  line-height: 60px; /* Vertically center the text there */
+    /* Margin bottom by footer height */
+    margin-bottom: 60px;
 }
 
+.footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    white-space: nowrap;
+    line-height: 60px; /* Vertically center the text there */
+}
+
+/* Random Trash */
+details > summary::-webkit-details-marker {
+    display:none;
+}
+details > summary {
+    list-style: none;
+}
 
 /* Emote image */
 
 .emote-image {
-  width: 100px;
-  height: 100px;
-  -khtml-user-select: none;
-  -o-user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
+    width: 100px;
+    height: 100px;
+    -khtml-user-select: none;
+    -o-user-select: none;
+    -moz-user-select: none;
+    -webkit-user-select: none;
+    user-select: none;
 
-  -webkit-user-drag: none; /* Prevents dragging of images/divs etc */
-  user-drag: none;
-}
-
-.guild-image {
-  width: 75px;
-  height: 75px;
-  -khtml-user-select: none;
-  -o-user-select: none;
-  -moz-user-select: none;
-  -webkit-user-select: none;
-  user-select: none;
-
-  -webkit-user-drag: none; /* Prevents dragging of images/divs etc */
-  user-drag: none;
-  
-  border-radius: 50%;
+    -webkit-user-drag: none; /* Prevents dragging of images/divs etc */
+    user-drag: none;
 }
 
 .section-header {
-  flex-basis: 100%;
+    flex-basis: 100%;
 }
 
+/* Guilds */
+
+.guild-card {
+    width: 100px;
+    position: relative;
+}
+
+.guild-image {
+    width: 100%;
+    border-radius: 50%;
+}
+
+.guild-name {
+    /*height: 40px;*/
+    /*width:  150px;*/
+    min-width: 120px;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+    display: none;
+    z-index: 10;
+}
+
+.guild-name > span {
+    /*display:block;*/
+    /*width: 100%;*/
+    /*height: 100%;*/
+    /*text-overflow: ellipsis;*/
+    /*overflow: hidden;*/
+    /*overflow-wrap: anywhere;*/
+}
+
+.guild-name > .pointer {
+    position:absolute;
+    height: 20px;
+    width: 20px;
+    right: 100%;
+    margin-right: -15px;
+    top: 50%;
+    margin-top: -10px;
+    z-index: -1;
+    border-left-width: 5px;
+    transform:rotate(45deg);
+    pointer-events: none;
+}
+
+.guild-card:hover .guild-name {
+    display: block;
+}

@@ -24,5 +24,10 @@ namespace Emotify.Data.Deserialization
         public bool owner { get; set; }
         public int permissions { get; set; }
         public string[] features { get; set; }
+
+        public ulong GetId()
+        {
+            return UInt64.Parse(id);
+        }
     }
 }

@@ -16,8 +16,6 @@ public class EmotifyDbContext : DbContext
 
     public DbSet<Emote> Emotes { get; set; }
     public DbSet<EmoteImage> EmoteImages { get; set; }
-
-    public DbSet<EnrolledGuild> EnrolledGuilds { get; set; }
     
     public DbSet<User> Users { get; set; }
 

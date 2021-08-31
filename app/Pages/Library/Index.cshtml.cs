@@ -66,7 +66,7 @@ namespace Emotify.Pages.Library
             Emotes = await emoteQuery.ToListAsync();
         }
 
-        public async Task<IActionResult> OnPostCopyAsync()
+        public IActionResult OnPostCopyAsync()
         {
             if (!ModelState.IsValid) return Page();
             return RedirectToPage("./Index");

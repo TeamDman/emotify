@@ -16,6 +16,7 @@ using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Authorization;
 using Emotify.Authorization;
+using Emotify.Authorization.Discord;
 using Emotify.Services;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -118,7 +119,7 @@ namespace Emotify
                     }
                 );
             services.AddScoped<IAuthorizationHandler, EmoteAuthorizationHandler>();
-            services.AddScoped<IAuthorizationHandler, DiscordGuildEnrollmentAuthorizationHandler>();
+            services.AddScoped<IAuthorizationHandler, ManageGuildEmotesAuthorizationHandler>();
 
             services.AddScoped<UserHelper>();
             services.AddSingleton<UserGuildStore>();

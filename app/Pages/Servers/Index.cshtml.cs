@@ -1,77 +1,80 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Threading.Tasks;
 using Discord;
 using Discord.WebSocket;
+using Emotify.Authorization.Discord;
 using Emotify.Extensions;
-using Emotify.Models;
 using Emotify.Services;
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.EntityFrameworkCore;
 
 namespace Emotify.Pages.Servers
 {
-    public record GuildPair(
-        EnrolledGuild Enrollment,
-        IGuild Guild
-    );
-
     public class IndexModel : PageModel
     {
-        
+        private readonly IAuthorizationService _auth;
+
         private readonly EmotifyDbContext _context;
         private readonly DiscordSocketClient _discordClient;
+        private readonly UserHelper _userHelper;
+        private readonly UserGuildStore _userGuildStore;
+
         public IndexModel(
             EmotifyDbContext context,
-            DiscordSocketClient discordSocketClient
+            DiscordSocketClient discordSocketClient,
+            IAuthorizationService authorizationService,
+            UserHelper userHelper,
+            UserGuildStore userGuildStore
         )
         {
             _context = context;
             _discordClient = discordSocketClient;
+            _auth = authorizationService;
+            _userHelper = userHelper;
+            _userGuildStore = userGuildStore;
         }
 
 
-        public IList<GuildPair> Guilds { get; set; }
+        public IList<IGuild> MyGuilds { get; set; }
+        public IList<IGuild> OtherGuilds { get; set; }
 
         // Filters
         [BindProperty(SupportsGet = true)]
-        public string SearchString { get; set; }
-
-        [BindProperty(SupportsGet = true)]
-        [DisplayName("Show mine")]
-        public bool ShowMine { get; set; } = true;
-
-
-        [BindProperty]
-        public IList<int> SelectedGuildIds { get; set; }
-
+        public string Search { get; set; }
 
         public async Task OnGetAsync()
         {
             // Get emotes and their images
-            var guildQuery =
-                from e in _context.EnrolledGuilds.AsAsyncEnumerable()
-                join g in _discordClient.Guilds.AsAsyncEnumerable() on e.Id equals g.Id
-                select new GuildPair(e, g);
+            var guildQuery = _discordClient.Guilds.AsQueryable();
             // If search query provided, filter results
-            if (!string.IsNullOrEmpty(SearchString))
-                guildQuery = guildQuery.Where(x => x.Guild.Name.Contains(SearchString));
+            if (!string.IsNullOrEmpty(Search))
+                guildQuery = guildQuery.Where(x => x.Name.Contains(Search));
 
-            // If not showing mine, filter out mine
-            if (!ShowMine)
-            {
-                var userId = UserHelper.GetUserId(User);
-                guildQuery = guildQuery.Where(x => x.Enrollment.OwnerUserId != userId);
-            }
+            // Get user
+            var user = await _userHelper.GetOrCreateUser(User);
 
-            // Return result list
-            Guilds = await guildQuery.ToListAsync();
+            // Get user guilds from OAuth
+            var userGuildIds = await _userGuildStore.GetGuilds(user).Select(g => UInt64.Parse(g.id)).ToListAsync();
+
+            // Get bot guilds matching user guilds
+            MyGuilds = guildQuery.AsEnumerable().Where(g => userGuildIds.Contains(g.Id)).Cast<IGuild>().ToList();
+
+            // Get rest of guilds
+            OtherGuilds = guildQuery.AsEnumerable().Except(MyGuilds).ToList();
+
+            // // If not showing mine, filter out mine
+            // if (!ShowMine)
+            // {
+            //     Guilds = await Guilds.ExceptAuthorizedAsync(User, _auth, DiscordOperations.ManageGuildEmotes);
+            // }
         }
 
-        public async Task<IActionResult> OnPostCopyAsync()
+        public IActionResult OnPostCopyAsync()
         {
             if (!ModelState.IsValid) return Page();
 

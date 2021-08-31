@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +16,7 @@ namespace Emotify.Extensions
     public static class BuiltinExtensions
     {
         // https://stackoverflow.com/a/14895226/11141271
-        public static async Task<IEnumerable<T>> WhereParallelAsync<T>(
+        public static async Task<IList<T>> WhereParallelAsync<T>(
             this IEnumerable<T> source,
             Func<T, Task<bool>> predicate
         )
@@ -29,10 +30,10 @@ namespace Emotify.Extensions
                 }
             );
             await Task.WhenAll(tasks);
-            return results;
+            return results.ToList();
         }
 
-        public static async Task<IEnumerable<T>> WhereAuthorizedAsync<T>(
+        public static async Task<IList<T>> WhereAuthorizedAsync<T>(
             this IEnumerable<T> source,
             ClaimsPrincipal user,
             IAuthorizationService authorizationService,
@@ -44,6 +45,22 @@ namespace Emotify.Extensions
                 {
                     var result = await authorizationService.AuthorizeAsync(user, item, requirement);
                     return result.Succeeded;
+                }
+            );
+        }
+        
+        public static async Task<IList<T>> ExceptAuthorizedAsync<T>(
+            this IEnumerable<T> source,
+            ClaimsPrincipal user,
+            IAuthorizationService authorizationService,
+            IAuthorizationRequirement requirement
+        )
+        {
+            return await source.WhereParallelAsync(
+                async item =>
+                {
+                    var result = await authorizationService.AuthorizeAsync(user, item, requirement);
+                    return !result.Succeeded;
                 }
             );
         }

@@ -5,7 +5,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Servers</h1>
 
 <p>
     <a asp-page="Enroll">Enroll a server</a>
@@ -13,27 +13,24 @@
 <div class="col-md-6">
     <form>
         <div class="form-group my-2">
-            <label class="form-label" asp-for="SearchString"></label>
-            <input class="form-control" asp-for="SearchString" />
-        </div>
-        <div class="form-group my-2">
-            <label class="form-label" asp-for="ShowMine"></label>
-            <input class="form-check-input" asp-for="ShowMine" />
-        </div>
-        <div class="form-group">
-            <input class="btn btn-primary" type="submit" value="Filter" />
+            <label class="form-label" asp-for="Search"></label>
+            <input class="form-control" asp-for="Search" />
         </div>
     </form>
 </div>
 <hr />
-@* <partial name="_EmoteItemScripts"></partial> *@
-<form method="post">
-    <input class="btn btn-primary" type="submit" asp-page-handler="Copy" value="Save selected to my library" />
-    @* <input class="btn btn-primary" type="submit" asp-page-handler="Copy" value="Copy" /> *@
-    <div class="d-flex">
-        @foreach (var item in Model.Guilds)
+
+<partial name="_GuildItemScripts"></partial>
+
+<details open>
+    <summary>
+        <h2>My Guilds</h2>
+
+    </summary>
+    <div class="d-flex flex-wrap">
+        @foreach (var item in Model.MyGuilds)
         {
             <partial name="_GuildItem" model="@item"></partial>
         }
     </div>
-</form>
+</details>
