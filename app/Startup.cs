@@ -44,7 +44,7 @@ namespace Emotify
 
 
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(
+        public async void ConfigureServices(
             IServiceCollection services
         )
         {
@@ -125,8 +125,10 @@ namespace Emotify
             services.AddSingleton<UserGuildStore>();
 
             var discordClient = new DiscordSocketClient();
-            discordClient.LoginAsync(TokenType.Bot, Configuration["Discord:Token"]).GetAwaiter().GetResult();
-            discordClient.StartAsync().GetAwaiter().GetResult();
+            discordClient.LoginAsync(TokenType.Bot, Configuration["Discord:ClientToken"]).GetAwaiter().GetResult();
+            // discordClient.StartAsync().GetAwaiter().GetResult();
+            await discordClient.StartAsync();
+            // Console.WriteLine($"Logged in as {discordClient.CurrentUser.Username}");
             services.AddSingleton(discordClient);
         }
 

@@ -6,7 +6,7 @@
         <span>@Html.DisplayFor(model => Model.Name)</span>
     </div>
     <image class="emote-image" src="@Model.EmoteImage.GetHtmlSrcAttribute()" aria-label="Emote image"
-        onclick="toggleEmoteChecked(this)" draggable="false" ondragstart="preventDrag(e)"></image>
+        onclick="toggleEmoteChecked(this)" draggable="false" ondragstart="event.preventDefault()"></image>
     <div class="col-md-12 p-1 bg-secondary d-flex justify-content-around flex-row">
         <a class="text-decoration-none" asp-page="./Edit" asp-route-id="@Model.Id">
             <span class="fas fa-edit" aria-label="Edit"></span>

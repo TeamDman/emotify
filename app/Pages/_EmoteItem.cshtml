@@ -1,0 +1,10 @@
+@model Emotify.Models.Emote
+
+<div class="emote-card m-2">
+    <div class="emote-name p-2 bg-primary">
+        <div class="pointer bg-primary"></div>
+        @* <input type="checkbox" class="form-check-input" name="SelectedEmoteIds" value="@Model.Id" /> *@
+        <span>@Html.DisplayFor(model => Model.Name)</span>
+    </div>
+    <image class="emote-image" src="@Model.EmoteImage.GetHtmlSrcAttribute()" aria-label="Emote image"></image>
+</div>

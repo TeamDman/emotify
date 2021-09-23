@@ -7,28 +7,35 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-page="Create">Create New</a>
-</p>
+<div class="d-flex col-12">
+    <div class="col-2">
+        <a asp-page="Create">Create New</a>
+    </div>
+    <div class="col-1"><em>or</em></div>
+    <div class="col-9">
+        <form action="/file-upload" class="dropzone" id="emote-upload"></form>
+    </div>
+</div>
+
 <div class="col-md-6">
     <form>
         <div class="form-group my-2">
             <label class="form-label" asp-for="SearchString"></label>
-            <input class="form-control" asp-for="SearchString" />
+            <input class="form-control" asp-for="SearchString"/>
         </div>
         <div class="form-group my-2">
             <label class="form-label" asp-for="ShowMine"></label>
-            <input class="form-check-input" asp-for="ShowMine" />
+            <input class="form-check-input" asp-for="ShowMine"/>
         </div>
         <div class="form-group">
-            <input class="btn btn-primary" type="submit" value="Filter" />
+            <input class="btn btn-primary" type="submit" value="Filter"/>
         </div>
     </form>
 </div>
-<hr />
+<hr/>
 <partial name="_EmoteItemScripts"></partial>
 <form method="post">
-    <input class="btn btn-primary" type="submit" asp-page-handler="Copy" value="Save selected to my library" />
+    <input class="btn btn-primary" type="submit" asp-page-handler="Copy" value="Save selected to my library"/>
     @* <input class="btn btn-primary" type="submit" asp-page-handler="Copy" value="Copy" /> *@
     <div class="d-flex">
         @foreach (var item in Model.Emotes)
@@ -37,3 +44,9 @@
         }
     </div>
 </form>
+
+@section Scripts
+{
+    <script src="lib/dropzone/dropzone.min.js"></script>
+    <link rel="stylesheet" href="lib/dropzone/dropzone.min.css">
+}

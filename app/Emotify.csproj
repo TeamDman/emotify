@@ -89,6 +89,14 @@
     <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ValidationScriptsPartial.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewImports.cshtml" />
     <_ContentIncludedByDefault Remove="Areas\Identity\Pages\_ViewStart.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Library\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Library\_GuildItem.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Servers\Index.cshtml" />
+    <_ContentIncludedByDefault Remove="Pages\Servers\_GuildItem.cshtml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Partials" />
   </ItemGroup>
 
 </Project>

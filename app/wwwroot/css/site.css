@@ -58,19 +58,48 @@ details > summary {
     list-style: none;
 }
 
+/* Emote upload */
+#emote-upload, #emote-upload > .dz-image-preview {
+    background: transparent;
+}
+
 /* Emote image */
 
-.emote-image {
-    width: 100px;
-    height: 100px;
-    -khtml-user-select: none;
-    -o-user-select: none;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    user-select: none;
+.emote-card {
+    width: 40px;
+    position: relative;
+}
 
-    -webkit-user-drag: none; /* Prevents dragging of images/divs etc */
-    user-drag: none;
+.emote-image {
+    width: 100%;
+}
+
+.emote-name {
+    min-width: 120px;
+    left: calc(100% + 10px);
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+    display: none;
+    z-index: 10;
+}
+
+.emote-name > .pointer {
+    position:absolute;
+    height: 20px;
+    width: 20px;
+    right: 100%;
+    margin-right: -15px;
+    top: 50%;
+    margin-top: -10px;
+    z-index: -1;
+    border-left-width: 5px;
+    transform:rotate(45deg);
+    pointer-events: none;
+}
+
+.emote-card:hover .emote-name {
+    display: block;
 }
 
 .section-header {
